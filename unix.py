@@ -1,3 +1,6 @@
+from datetime import datetime
+import time as tm
+
 def gettime(): # Get current UNIX time, to display to the user when the next batch will be sent 
   year = datetime.now().year
   month = datetime.now().month
