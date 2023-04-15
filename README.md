@@ -1,11 +1,11 @@
 # Overview:
 TEAL (TElegram ALgorithm) v1.0.1, Discord bot which helps scan for newly created nations and send them a recruitment telegram. Created by Jyezet (me).
 # Commands:
-1. The first command (#setRecruiter|s) requests the time between requests, the amount of batches it'll request (up to 5 batches, 8 nations per batch) and a %TELEGRAM-ID%. The same command will also prevent other users (apart from the recruiter) from using TEAL commands (hence the command's name, setRecruiter).
+1. The first command (#setRecruiter/#s) requests the time between requests, the amount of batches it'll request (up to 5 batches, 8 nations per batch) and a %TELEGRAM-ID%. The same command will also prevent other users (apart from the recruiter) from using TEAL commands (hence the command's name, setRecruiter).
 
-2. The second command (#recruit|r) will start the recruitment session. TEAL will wait the requested amount of time, after which it'll scan for the most recently created nations, format the list, paste it into NationStates links and send them to the recruiter. The recruiter will then manually open the links and send them. After doing this, the recruiter will confirm the sending of the telegrams with #recruit, and repeat.
+2. The second command (#recruit/#r) will start the recruitment session. TEAL will wait the requested amount of time, after which it'll scan for the most recently created nations, format the list, paste it into NationStates links and send them to the recruiter. The recruiter will then manually open the links and send them. After doing this, the recruiter will confirm the sending of the telegrams with #recruit, and repeat.
 
-3. The third command (#finish|f) will end the recruitment session and unlock the bot for others to make use of it.
+3. The third command (#finish/#f) will end the recruitment session and unlock the bot for others to make use of it.
 # How to add TEAL to your server:
 1. Download the latest version of the code.
 
