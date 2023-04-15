@@ -2,8 +2,6 @@ import discord
 from discord.ext import commands
 import nationstates as ns
 import asyncio
-from datetime import datetime
-import time as tm
 import unix
 
 intents = discord.Intents().all()
