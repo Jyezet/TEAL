@@ -170,7 +170,6 @@ async def Recruit(ctx):
     batch5 = newnations[33:42]
     
     # Start processing the batches to turn them into a correct url argument NS can read
-    # I beg for the pardon of whoever reviews this code for having to go through this part :(
     batch1 = (((str(batch1).replace("'", "")).replace(" ", "")).replace("[", "")).replace("]", "")
     batch2 = (((str(batch2).replace("'", "")).replace(" ", "")).replace("[", "")).replace("]", "")
     batch3 = (((str(batch3).replace("'", "")).replace(" ", "")).replace("[", "")).replace("]", "")
