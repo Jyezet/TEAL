@@ -4,17 +4,7 @@ import nationstates as ns
 import asyncio
 from datetime import datetime
 import time as tm
-
-def gettime(): # Get current UNIX time, to display to the user when the next batch will be sent 
-  year = datetime.now().year
-  month = datetime.now().month
-  day = datetime.now().day
-  hour = datetime.now().hour
-  minute = datetime.now().minute
-  second = datetime.now().second
-  tempvar = datetime(year, month, day, hour, minute, second)
-  unix = tm.mktime(tempvar.timetuple())
-  return unix
+import unix
 
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix='#', intents=intents)
@@ -145,7 +135,7 @@ async def Recruit(ctx):
         await ctx.send(embed=embed)
         return
 
-    ETA = int(gettime()) + time # Current UNIX timestamp + waiting time = UNIX timestamp for when the bot sends the batch(es)
+    ETA = int(unix.gettime()) + time # Current UNIX timestamp + waiting time = UNIX timestamp for when the bot sends the batch(es)
     embed = discord.Embed(title="Recruitment running", description=f"Current recruiter: {recruiterName}", color=0x008080)
     embed.add_field(name="", value=f"Scanning for new nations, please wait {time} seconds. \nETA: <t:{ETA+1}:R>", inline=False)
     if motivation: # Add motivational quote in case they are enabled
