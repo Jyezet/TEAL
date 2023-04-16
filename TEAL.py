@@ -5,7 +5,7 @@ import asyncio
 import unix
 
 intents = discord.Intents().all()
-bot = commands.Bot(command_prefix='#', intents=intents)
+bot = commands.Bot(command_prefix='*', intents=intents)
 api = ns.Nationstates(user_agent="TEAL tool, recruitment script used through a discord bot. Created by: Jyezet")
 bot.remove_command('help')
 recruiter = None # The person who will be able to use the recruiting commands at a time
