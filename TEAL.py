@@ -160,7 +160,7 @@ async def Recruit(ctx):
     # Turn the string into a list spliting it through the commas
     # And from all that get the first 41 nations.
     newnations2 = api.world().get_shards("newnations")["newnations"]
-    newnations = list(set(set(newnations2) - set(newnations1)))
+    newnations = list(set(newnations2) - set(newnations1))
     links = []
     for x in newnations:
       links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={batch5}&message={template}")
