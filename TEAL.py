@@ -5,7 +5,7 @@ import asyncio
 import unix
 
 intents = discord.Intents().all()
-bot = commands.Bot(command_prefix='*', intents=intents)
+bot = commands.Bot(command_prefix='t ', intents=intents)
 api = ns.Nationstates(user_agent="TEAL tool, recruitment script used through a discord bot. Created by: Jyezet")
 bot.remove_command('help')
 recruiter = None # The person who will be able to use the recruiting commands at a time
@@ -13,7 +13,6 @@ recruiterName = None
 motivation = True
 rawTemplate = None
 time = None
-batchAmount = None
 
 @bot.event 
 async def on_command_error(ctx, error): # What happens when someone inputs a non-existant command
@@ -30,7 +29,7 @@ async def rhelp(ctx):
   embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png") 
   embed.add_field(name="rhelp (rh)", value="```Show this help section.```", inline=False)
   embed.add_field(name="toggleMotivation (tm|togglemotivation|togglemotivationalquotes)", value="```Toggle on or off motivational quotes.```", inline=False)
-  embed.add_field(name="setRecruiter (s|setrecruiter) [Template-id] [Scanning time in seconds] [Amount of batches]", value="```Input all the information the bot needs to start recruiting.```", inline=False)
+  embed.add_field(name="setRecruiter (s|setrecruiter) [Template-id] [Scanning time in seconds]", value="```Input all the information the bot needs to start recruiting.```", inline=False)
   embed.add_field(name="Recruit (r|recruit)", value="```Wait an inputted amount of time before sending batch(es).```", inline=False)
   embed.add_field(name="Finish (f|finish)", value="```Finish the current recruiting session, leaving the bot free for anyone to use.```", inline=False)
   await ctx.send(embed=embed)
@@ -61,18 +60,24 @@ async def toggleMotivation(ctx):
     await ctx.send(embed=embed)
 
 @bot.command(aliases=["s", "setrecruiter"])
-async def setRecruiter(ctx, localRawTemplate: str, localTime: int, localBatchAmount: int):
+async def setRecruiter(ctx, localRawTemplate: str, localTime: float):
   try:
     global recruiter
     global recruiterName
     global motivation
     global rawTemplate
     global time
-    global batchAmount
+
+    if localTime < 30:
+      embed = discord.Embed(title="Error", description=f"Current recruiter: {recruiterName}", color=0xfc0320) 
+      embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
+      embed.add_field(name="", value="Wait time can't be lower than 30 seconds", inline=False)
+      embed.set_footer(text="Made by Jyezet (GSZ#0001)")
+      await ctx.send(embed=embed)
+      return
 
     rawTemplate = localRawTemplate
     time = localTime
-    batchAmount = localBatchAmount
 
     recruiter = ctx.author.id
     recruiterName = ctx.author
@@ -106,7 +111,6 @@ async def Finish(ctx):
       embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
       embed.set_footer(text="Made by Jyezet (GSZ#0001)")
       await ctx.send(embed=embed)
-      #await recruit().stop()
   except:
     embed = discord.Embed(title="Error", description=f"Current recruiter: {recruiterName}", color=0xfc0320) 
     embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
@@ -121,19 +125,9 @@ async def Recruit(ctx):
   global motivation
   global rawTemplate
   global time
-  global batchAmount
 
   if ctx.author.id == recruiter:
-    # The bot fetches up to 5 batches at a time, so it can't send more than 5 when requested to do so
-    if batchAmount > 5:
-        embed = discord.Embed(title="Error", description=f"Current recruiter: {recruiterName}", color=0xfc0320)
-        embed.add_field(name="", value="Cannot fetch more than 5 batches at a time", inline=False)
-        embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
-        embed.set_footer(text="Made by Jyezet (GSZ#0001)")
-        await ctx.send(embed=embed)
-        return
-
-    ETA = int(unix.gettime()) + time # Current UNIX timestamp + waiting time = UNIX timestamp for when the bot sends the batch(es)
+    ETA = int(unix.gettime()) + int(time) # Current UNIX timestamp + waiting time = UNIX timestamp for when the bot sends the batch
     embed = discord.Embed(title="Recruitment running", description=f"Current recruiter: {recruiterName}", color=0x008080)
     embed.add_field(name="", value=f"Scanning for new nations, please wait {time} seconds. \nETA: <t:{ETA+1}:R>", inline=False)
     if motivation: # Add motivational quote in case they are enabled
@@ -148,26 +142,59 @@ async def Recruit(ctx):
       editedEmbed.add_field(name="", value="```\"If you want to go fast, go alone. \nIf you want to go far, go together.\" \n-African proverb```")
     editedEmbed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
     editedEmbed.set_footer(text="Made by Jyezet (GSZ#0001)")
-    newnations1 = api.world().get_shards("newnations")["newnations"]
+
+    editedEmbed2 = discord.Embed(title="Recruitment running", description=f"Current recruiter: {recruiterName}", color=0x008080)
+    editedEmbed2.add_field(name="", value=f"Scanning for new nations, please wait {time} seconds. \n**No new nations have been created.**", inline=False)
+    if motivation: # Add motivational quote in case they are enabled
+      editedEmbed2.add_field(name="", value="```\"If you want to go fast, go alone. \nIf you want to go far, go together.\" \n-African proverb```")
+    editedEmbed2.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
+    editedEmbed2.set_footer(text="Made by Jyezet (GSZ#0001)")
+
+    # Get new nations shard
+    newnations1 = (api.world().get_shards("newnations")["newnations"]).split(",")
     await asyncio.sleep(time) # Wait the assigned time before scanning for a batch
     
     # From %TEMPLATE-ID% to %25TEMPLATE-ID%25 (That way the browser can read it)
     rawTemplate2 = rawTemplate.replace("%", "")
     template = f"%25{rawTemplate2}%25"
     
-    # Asks the api to fetch information from the world's new nations shard,
-    # Remove the "header" of the returned information (using ["newnations"]),
-    # Turn the string into a list spliting it through the commas
-    # And from all that get the first 41 nations.
-    newnations2 = api.world().get_shards("newnations")["newnations"]
+    # Get new nations shard again to compare differences (newly created nations within the recruiting process)
+    newnations2 = (api.world().get_shards("newnations")["newnations"]).split(",")
     newnations = list(set(newnations2) - set(newnations1))
+    await ctx.send(newnations)
+
+    while True:
+      newnations2 = (api.world().get_shards("newnations")["newnations"]).split(",")
+      newnations = list(set(newnations2) - set(newnations1))
+      if not newnations: # If there are not new nations, stop the command
+        embed = discord.Embed(title="TEAL", description=f"Current recruiter: {recruiterName}", color=0xfc0320)
+        embed.add_field(name="", value="No new nations, scanning again.", inline=False)
+        embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
+        embed.set_footer(text="Made by Jyezet (GSZ#0001)")
+        await ctx.send(embed=embed)
+        await msg.edit(embed=editedEmbed2)
+        await asyncio.sleep(30)
+      else:
+        break
+    sendTo1 = []
+    sendTo2 = []
     links = []
+
     for x in newnations:
-      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={batch5}&message={template}")
+      if len(sendTo1) <= 8:
+        sendTo1.append(f"{x},")
+      elif len(sendTo2) <= 16:
+        sendTo2.append(f"{x},")
+      else:
+        break
+    sendTo1 = ((str(sendTo1).replace("[", "")).replace("]", "")).replace("'", "")
+    sendTo2 = ((str(sendTo2).replace("[", "")).replace("]", "")).replace("'", "")
 
-
-
-    
+    if not sendTo2:
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={sendTo1}&message={template}")
+    else:
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={sendTo1}&message={template}")
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={sendTo2}&message={template}")
     # Turn the raw links into a nice embedded message
     # With a for loop filter the non-requested batches out
     embed = discord.Embed(title="Recruitment running", description=f"Current recruiter: {recruiterName}", color=0x008080)
@@ -175,9 +202,8 @@ async def Recruit(ctx):
     embed.set_footer(text="Made by Jyezet (GSZ#0001)")
     for x in range(len(links)):
         embed.add_field(name="", value=f"[Batch number {x+1}]({links[x]})", inline=False)
-    embed.add_field(name="", value="Once you send all TGs, use .r", inline=False)
+    embed.add_field(name="", value="Once you send all TGs, use *recruit", inline=False)
     await ctx.send(ctx.message.author.mention, embed=embed) # Send the embedded message
-    
     await msg.edit(embed=editedEmbed)
   else:
     embed = discord.Embed(title="Error", description=f"Current recruiter: {recruiterName}", color=0xfc0320)
