@@ -148,6 +148,7 @@ async def Recruit(ctx):
       editedEmbed.add_field(name="", value="```\"If you want to go fast, go alone. \nIf you want to go far, go together.\" \n-African proverb```")
     editedEmbed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
     editedEmbed.set_footer(text="Made by Jyezet (GSZ#0001)")
+    newnations1 = api.world().get_shards("newnations")["newnations"]
     await asyncio.sleep(time) # Wait the assigned time before scanning for a batch
     
     # From %TEMPLATE-ID% to %25TEMPLATE-ID%25 (That way the browser can read it)
@@ -158,45 +159,21 @@ async def Recruit(ctx):
     # Remove the "header" of the returned information (using ["newnations"]),
     # Turn the string into a list spliting it through the commas
     # And from all that get the first 41 nations.
-    newnations = ((api.world().get_shards("newnations")["newnations"]).split(","))[0:41]
-    
-    # Divide the 40 most recently created nations onto 5 batches, 
-    # 8 nations per batch (the most receivers one telegram can have without using stamps).
-    # The idea is to paste these batches into a compose-telegram link to get the final link.
-    batch1 = newnations[0:8] 
-    batch2 = newnations[8:16]
-    batch3 = newnations[17:25]
-    batch4 = newnations[25:33]
-    batch5 = newnations[33:42]
-    
-    # Start processing the batches to turn them into a correct url argument NS can read
-    batch1 = (((str(batch1).replace("'", "")).replace(" ", "")).replace("[", "")).replace("]", "")
-    batch2 = (((str(batch2).replace("'", "")).replace(" ", "")).replace("[", "")).replace("]", "")
-    batch3 = (((str(batch3).replace("'", "")).replace(" ", "")).replace("[", "")).replace("]", "")
-    batch4 = (((str(batch4).replace("'", "")).replace(" ", "")).replace("[", "")).replace("]", "")
-    batch5 = (((str(batch5).replace("'", "")).replace(" ", "")).replace("[", "")).replace("]", "")
-    
-    # Paste the batches and template into an NS link and assign them to variables
-    link1 = f"https://www.nationstates.net/page=compose_telegram?tgto={batch1}&message={template}"
-    link2 = f"https://www.nationstates.net/page=compose_telegram?tgto={batch2}&message={template}"
-    link3 = f"https://www.nationstates.net/page=compose_telegram?tgto={batch3}&message={template}"
-    link4 = f"https://www.nationstates.net/page=compose_telegram?tgto={batch4}&message={template}"
-    link5 = f"https://www.nationstates.net/page=compose_telegram?tgto={batch5}&message={template}"
-    
-    # Put the links on a list to filter out non-requested batches
+    newnations2 = api.world().get_shards("newnations")["newnations"]
+    newnations = list(set(set(newnations2) - set(newnations1)))
     links = []
-    links.append(link1)
-    links.append(link2)
-    links.append(link3)
-    links.append(link4)
-    links.append(link5)
+    for x in newnations:
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={batch5}&message={template}")
+
+
+
     
     # Turn the raw links into a nice embedded message
     # With a for loop filter the non-requested batches out
     embed = discord.Embed(title="Recruitment running", description=f"Current recruiter: {recruiterName}", color=0x008080)
     embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
     embed.set_footer(text="Made by Jyezet (GSZ#0001)")
-    for x in range(batchAmount):
+    for x in range(len(links)):
         embed.add_field(name="", value=f"[Batch number {x+1}]({links[x]})", inline=False)
     embed.add_field(name="", value="Once you send all TGs, use .r", inline=False)
     await ctx.send(ctx.message.author.mention, embed=embed) # Send the embedded message
