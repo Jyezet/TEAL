@@ -1,5 +1,5 @@
 # Overview:
-TEAL (TElegram ALgorithm) v1.0.1, Discord bot which helps scan for newly created nations and send them a recruitment telegram. Created by Jyezet (me).
+TEAL (TElegram ALgorithm) v1.2, Discord bot which helps scan for newly created nations and send them a recruitment telegram. Created by Jyezet (me).
 # Commands:
 1. The first command (#setRecruiter/#s) requests the time between requests, the amount of batches it'll request (up to 5 batches, 8 nations per batch) and a %TELEGRAM-ID%. The same command will also prevent other users (apart from the recruiter) from using TEAL commands (hence the command's name, setRecruiter).
 
