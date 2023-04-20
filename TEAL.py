@@ -78,7 +78,7 @@ async def Recruit(ctx):
     for x in newnations:
       if len(sendTo1Raw) <= 8:
         sendTo1Raw.append(x)
-      elif len(senTo2Raw) <= 16:
+      elif len(sendTo2Raw) <= 16:
         sendTo2Raw.append(x)
       else:
         break
