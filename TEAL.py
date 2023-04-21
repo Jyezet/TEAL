@@ -251,4 +251,4 @@ async def Finish(ctx):
     embed.set_footer(text="Made by Jyezet, Qekitor and Destiny")
     await ctx.send(embed=embed)
 
-bot.run("MTA4OTcwNjM5NTgxOTA2MTI3OA.GXF-KI.JGsXuWEm23xYVasAkiEvfnpvuTbgiQsQ22nwtU") # INSERT YOUR BOT TOKEN BETWEEN THE QUOTES
+bot.run("TOKEN") # INSERT YOUR BOT TOKEN BETWEEN THE QUOTES
