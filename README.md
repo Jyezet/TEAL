@@ -21,6 +21,6 @@ TEAL (TElegram ALgorithm) v1.2, Discord bot which helps scan for newly created n
 
 7. Open TEAL's code, scroll down to the bottom, and replace "TOKEN" with your token (Don't remove the quotes!).
 
-8. Run the code. If your bot does not respond to your commands, install the python modules listed on top with python -m pip install MODULE
+8. Run the code. If your bot does not respond to your commands, install the python modules listed on requirements.txt with python -m pip install MODULE
 
 *The selected permissions will let the bot: Send messages (duh), send messages on threads (in case you want to set a thread as your recruitment channel), insert links (for the batches) and read the messages history.
