@@ -267,4 +267,4 @@ async def help(ctx):
   embed.add_field(name="Finish (f|finish)", value="```Finish the current recruiting session, leaving the bot free for anyone to use.```", inline=False)
   await ctx.send(embed=embed)
 
-bot.run("MTA4OTcwNjM5NTgxOTA2MTI3OA.GXMWzh.ZDd5hE_A98Wvv-yBKykw_ed68g8DPpT3igtoZM") # INSERT YOUR BOT TOKEN BETWEEN THE QUOTES
+bot.run("TOKEN") # INSERT YOUR BOT TOKEN BETWEEN THE QUOTES
