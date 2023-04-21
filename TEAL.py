@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import nationstates as ns
 import asyncio
+import random as rn
 import unix
 
 intents = discord.Intents().all()
@@ -11,6 +12,12 @@ bot.remove_command('help')
 recruiter = None # The person who will be able to use the recruiting commands at a time
 recruiterName = None
 motivation = True
+motivational_quotes = ["```\"If you want to go fast, go alone. If you want to go far, go together.\" -African proverb```",
+                       "```\"Even if you\'re on the right track, you\'ll get run over if you just sit there.\" -Will Rogers```",
+                       "```\"The journey of a thousand miles begins with one step.\" -Lao Tzu```",
+                       "```\"Learn as if you will live forever, live like you will die tomorrow.\" — Mahatma Gandhi```",
+                       "```\"The pessimist sees difficulty in every opportunity. The optimist sees opportunity in every difficulty.\" — Winston Churchill```",
+                       ]
 rawTemplate = None
 time = None
 
@@ -23,11 +30,12 @@ async def Recruit(ctx):
   global time
 
   if ctx.author.id == recruiter:
-    ETA = int(unix.gettime()) + int(time) # Current UNIX timestamp + waiting time = UNIX timestamp for when the bot sends the batch
+    ETA = int(unix.gettime()) + time # Current UNIX timestamp + waiting time = UNIX timestamp for when the bot sends the batch
     embed = discord.Embed(title="Recruitment running", description=f"Current recruiter: {recruiterName}", color=0x008080)
     embed.add_field(name="", value=f"Scanning for new nations, please wait {time} seconds. \nETA: <t:{ETA+1}:R>", inline=False)
     if motivation: # Add motivational quote in case they are enabled
-      embed.add_field(name="", value="```\"If you want to go fast, go alone. \nIf you want to go far, go together.\" \n-African proverb```")
+      quote = rn.randint(0, len(motivational_quotes))
+      embed.add_field(name="", value=motivational_quotes[quote], inline=False)
     embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
     embed.set_footer(text="Made by Jyezet, Qekitor and Destiny")
     msg = await ctx.send(embed=embed)
@@ -35,14 +43,16 @@ async def Recruit(ctx):
     editedEmbed = discord.Embed(title="Recruitment running", description=f"Current recruiter: {recruiterName}", color=0x008080)
     editedEmbed.add_field(name="", value=f"Scanning for new nations, please wait {time} seconds. \n**New round of batches has been sent.**", inline=False)
     if motivation: # Add motivational quote in case they are enabled
-      editedEmbed.add_field(name="", value="```\"If you want to go fast, go alone. \nIf you want to go far, go together.\" \n-African proverb```")
+      quote = rn.randint(0, len(motivational_quotes))
+      editedEmbed.add_field(name="", value=motivational_quotes[quote], inline=False)
     editedEmbed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
     editedEmbed.set_footer(text="Made by Jyezet, Qekitor and Destiny")
 
     editedEmbed2 = discord.Embed(title="Recruitment running", description=f"Current recruiter: {recruiterName}", color=0x008080)
     editedEmbed2.add_field(name="", value=f"Scanning for new nations, please wait {time} seconds. \n**No new nations have been created.**", inline=False)
     if motivation: # Add motivational quote in case they are enabled
-      editedEmbed2.add_field(name="", value="```\"If you want to go fast, go alone. \nIf you want to go far, go together.\" \n-African proverb```")
+      quote = rn.randint(0, len(motivational_quotes))
+      editedEmbed2.add_field(name="", value=motivational_quotes[quote], inline=False)
     editedEmbed2.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
     editedEmbed2.set_footer(text="Made by Jyezet, Qekitor and Destiny")
 
@@ -68,28 +78,36 @@ async def Recruit(ctx):
         embed.set_footer(text="Made by Jyezet, Qekitor and Destiny")
         await ctx.send(embed=embed)
         await msg.edit(embed=editedEmbed2)
-        await asyncio.sleep(30)
+        await asyncio.sleep(time)
       else:
         break
-    sendTo1Raw = []
-    sendTo2Raw = []
+    sendTos = []
     links = []
 
     for x in newnations:
-      if len(sendTo1Raw) <= 8:
-        sendTo1Raw.append(x)
-      elif len(sendTo2Raw) <= 16:
-        sendTo2Raw.append(x)
-      else:
-        break
-    sendTo1 = ",".join(sendTo1Raw) # Delete brackets, extra whitespaces and extra commas in one go. For the record, this line used to use like 8 nested .replace methods
-    sendTo2 = ",".join(sendTo2Raw)
+      sendTos.append(x)
+    comma = ","
 
-    if not sendTo2: # If there's no second batch just send the first one
-      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={sendTo1}&message={template}")
+    if not sendTo2: # This yandere ah code is to check what variables are not empty and thus can be put in a batch
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[0:8])}&message={template}")
+    elif not sendTo3:
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[0:8])}&message={template}")
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[8,17])}&message={template}")
+    elif not sendTo4:
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[0:8])}&message={template}")
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[8,17])}&message={template}")
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[17,25])}&message={template}")
+    elif not sendTo5:
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[0:8])}&message={template}")
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[8,17])}&message={template}")
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[17,25])}&message={template}")
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[25,33])}&message={template}")
     else:
-      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={sendTo1}&message={template}")
-      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={sendTo2}&message={template}")
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[0:8])}&message={template}")
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[8,17])}&message={template}")
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[17,25])}&message={template}")
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[25,33])}&message={template}")
+      links.append(f"https://www.nationstates.net/page=compose_telegram?tgto={comma.join(sendTos[33,40])}&message={template}")
 
     # Turn the raw links into a nice embedded message
     embed = discord.Embed(title="Recruitment running", description=f"Current recruiter: {recruiterName}", color=0x008080)
@@ -105,7 +123,7 @@ async def Recruit(ctx):
     embed.add_field(name="", value="You are not the assigned recruiter", inline=False)
     embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
     embed.set_footer(text="Made by Jyezet, Qekitor and Destiny")
-    await ctx.send(embed=embed) # Only the one who uses .s can use the recruitment commands
+    await ctx.send(embed=embed) # Only the one who uses t s can use the recruitment commands
 
 @bot.event 
 async def on_command_error(ctx, error): # What happens when someone inputs a non-existant command
@@ -161,14 +179,13 @@ async def toggleMotivation(ctx):
     await ctx.send(embed=embed)
 
 @bot.command(aliases=["s", "setrecruiter"])
-async def setRecruiter(ctx, localRawTemplate: str, localTime: float):
+async def setRecruiter(ctx, localRawTemplate: str, localTime: int):
   try:
     global recruiter
     global recruiterName
     global motivation
     global rawTemplate
     global time
-
     if localTime < 30:
       embed = discord.Embed(title="Error", description=f"Current recruiter: {recruiterName}", color=0xfc0320) 
       embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
@@ -176,19 +193,26 @@ async def setRecruiter(ctx, localRawTemplate: str, localTime: float):
       embed.set_footer(text="Made by Jyezet, Qekitor and Destiny")
       await ctx.send(embed=embed)
       return
+    if recruiter == None and recruiterName == None:
+      rawTemplate = localRawTemplate
+      time = localTime
 
-    rawTemplate = localRawTemplate
-    time = localTime
-
-    recruiter = ctx.author.id
-    recruiterName = ctx.author
-    embed = discord.Embed(title="Recruitment settings", description=f"Current recruiter: {recruiterName}", color=0x008080)
-    
-    if motivation: # Add motivational quote in case they are enabled
-      embed.add_field(name="", value="```\"The journey of a thousand\n miles begins with one step.\" \n-Lao Tzu```", inline=False)
-    embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
-    embed.set_footer(text="Made by Jyezet, Qekitor and Destiny")
-    await ctx.send(embed=embed)
+      recruiter = ctx.author.id
+      recruiterName = ctx.author
+      embed = discord.Embed(title="Recruitment settings", description=f"Current recruiter: {recruiterName}", color=0x008080)
+        
+      if motivation: # Add motivational quote in case they are enabled
+        quote = rn.randint(0, len(motivational_quotes))
+        embed.add_field(name="", value=motivational_quotes[quote], inline=False)
+      embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
+      embed.set_footer(text="Made by Jyezet, Qekitor and Destiny")
+      await ctx.send(embed=embed)
+    else:
+      embed = discord.Embed(title="Error", description=f"Current recruiter: {recruiterName}", color=0xfc0320)
+      embed.add_field(name="", value="You are not the assigned recruiter", inline=False)
+      embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
+      embed.set_footer(text="Made by Jyezet, Qekitor and Destiny")
+      await ctx.send(embed=embed) # Only the one who uses t s can use the recruitment commands
   except:
     embed = discord.Embed(title="Error", description=f"Current recruiter: {recruiterName}", color=0xfc0320) 
     embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
@@ -209,7 +233,8 @@ async def Finish(ctx):
 
         embed = discord.Embed(title="Recruitment settings", description=f"Current recruiter: None", color=0x008080)
         if motivation: # Add motivational quote in case they are enabled
-          embed.add_field(name="", value="```\"Even if you’re on\n the right track, you’ll\n get run over if you just\n sit there.\" -Will Rogers```", inline=False)
+          quote = rn.randint(0, len(motivational_quotes))
+          embed.add_field(name="", value=motivational_quotes[quote], inline=False)
         embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png")
         embed.set_footer(text="Made by Jyezet, Qekitor and Destiny")
         await ctx.send(embed=embed)
@@ -226,4 +251,4 @@ async def Finish(ctx):
     embed.set_footer(text="Made by Jyezet, Qekitor and Destiny")
     await ctx.send(embed=embed)
 
-bot.run("TOKEN") # INSERT YOUR BOT TOKEN BETWEEN THE QUOTES
+bot.run("MTA4OTcwNjM5NTgxOTA2MTI3OA.GXF-KI.JGsXuWEm23xYVasAkiEvfnpvuTbgiQsQ22nwtU") # INSERT YOUR BOT TOKEN BETWEEN THE QUOTES
