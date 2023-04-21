@@ -262,9 +262,9 @@ async def help(ctx):
   embed.set_author(name="TEAL", icon_url="https://i.imgur.com/oPZTgUN.png") 
   embed.add_field(name="help (h)", value="```Show this help section.```", inline=False)
   embed.add_field(name="toggleMotivation (tm|togglemotivation|togglemotivationalquotes)", value="```Toggle on or off motivational quotes.```", inline=False)
-  embed.add_field(name="setRecruiter (s|setrecruiter) [Template-id] [Scanning time in seconds] [user agent (your nation)]", value="```Input all the information the bot needs to start recruiting.```", inline=False)
+  embed.add_field(name="setRecruiter (s|setrecruiter) [Template-id] [Scanning time in seconds]", value="```Input all the information the bot needs to start recruiting.```", inline=False)
   embed.add_field(name="Recruit (r|recruit)", value="```Wait an inputted amount of time before sending batch(es).```", inline=False)
   embed.add_field(name="Finish (f|finish)", value="```Finish the current recruiting session, leaving the bot free for anyone to use.```", inline=False)
   await ctx.send(embed=embed)
 
-bot.run("TOKEN") # INSERT YOUR BOT TOKEN BETWEEN THE QUOTES
+bot.run("MTA4OTcwNjM5NTgxOTA2MTI3OA.GXMWzh.ZDd5hE_A98Wvv-yBKykw_ed68g8DPpT3igtoZM") # INSERT YOUR BOT TOKEN BETWEEN THE QUOTES
