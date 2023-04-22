@@ -3,7 +3,7 @@ from discord.ext import commands
 import nationstates as ns
 import asyncio
 import random as rn
-import unix
+import time
 
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix='t ', intents=intents)
@@ -30,7 +30,7 @@ async def Recruit(ctx):
   global rawTemplate
   global time
   if ctx.author.id == recruiter:
-    ETA = int(unix.gettime()) + time # Current UNIX timestamp + waiting time = UNIX timestamp for when the bot sends the batch
+    ETA = int(time.time()) + time # Current UNIX timestamp + waiting time = UNIX timestamp for when the bot sends the batch
     embed = discord.Embed(title="Recruitment running", description=f"Current recruiter: {recruiterName}", color=0x008080)
     embed.add_field(name="", value=f"Scanning for new nations, please wait {time} seconds. \nETA: <t:{ETA+1}:R>", inline=False)
     if motivation: # Add motivational quote in case they are enabled
